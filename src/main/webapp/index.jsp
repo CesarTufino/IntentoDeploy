@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="refresh" content="0;url=MenuController?ruta=inicio">
+  <meta http-equiv="refresh" content="0;url=LoginController?ruta=inicio">
 </head>
 <body>
 </body>

@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -47,6 +47,11 @@
             </div>
         </div>
         <div id="seccionCombo" style="display: none;">
+            <div class="mb-3">
+                <label for="numeroAlquiler" class="form-label">Número de Alquiler</label>
+                <input type="text" id="numeroAlquiler"
+                       name="numeroAlquiler" class="form-control" readonly>
+            </div>
             <table id="tablaPeliculas" class="display" style="width: 100%">
                 <thead>
                 <tr>
@@ -65,7 +70,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Devolver</button>
-        <a href="MenuController?ruta=inicio" type="button" class="btn btn-secondary">
+        <a href="MenuController?ruta=inicioCajero" type="button" class="btn btn-secondary">
             Volver
         </a>
     </form>
@@ -78,6 +83,7 @@
     var alquileres = [
         <c:forEach items="${alquileres}" var="alquiler" varStatus="status">
         {
+            numero: '<c:out value="${alquiler.numeroAlquiler}" />',
             cedula: '<c:out value="${alquiler.cliente.cedula}" />',
             ejemplares: [
                 <c:forEach items="${alquiler.ejemplares}" var="ejemplar" varStatus="ejemplarStatus">
@@ -127,18 +133,21 @@
                 apellido.setAttribute("value", cliente.apellido);
                 seccionCombo.style.display = 'block';
 
+                const numeroAlquiler = document.getElementById('numeroAlquiler');
+                numeroAlquiler.setAttribute("value", alquilerCorrespondiente.numero);
+
                 for (const ejemplar of alquilerCorrespondiente.ejemplares) {
                     const row = tablaPeliculasBody.insertRow();
                     const codigoCell = row.insertCell(0);
                     const peliculaCell = row.insertCell(1);
                     const devueltaCell = row.insertCell(2);
 
-                    if (ejemplar.estado === "true"){
+                    if (ejemplar.estado === "true") {
                         continue;
                     }
                     codigoCell.innerHTML = ejemplar.codigo;
                     peliculaCell.innerHTML = ejemplar.pelicula;
-                    devueltaCell.innerHTML = `<input type="checkbox" id="`+ejemplar.codigo+`" name="`+ejemplar.codigo+`">`;
+                    devueltaCell.innerHTML = `<input type="checkbox" id="` + ejemplar.codigo + `" name="` + ejemplar.codigo + `">`;
                 }
 
                 break;

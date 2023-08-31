@@ -76,6 +76,12 @@ public class Ejemplar {
             ejemplares.add(new Ejemplar("E002", true, 7, modeloPelicula.getPeliculas().get(1)));
             ejemplares.add(new Ejemplar("E003", true, 7, modeloPelicula.getPeliculas().get(1)));
             ejemplares.add(new Ejemplar("E004", true, 6, modeloPelicula.getPeliculas().get(2)));
+            ejemplares.add(new Ejemplar("E005", true, 8,modeloPelicula.getPeliculas().get(3)));
+            ejemplares.add(new Ejemplar("E006", true, 5, modeloPelicula.getPeliculas().get(4)));
+            ejemplares.add(new Ejemplar("E007", true, 5.99, modeloPelicula.getPeliculas().get(5)));
+            ejemplares.add(new Ejemplar("E008", true, 5.99, modeloPelicula.getPeliculas().get(5)));
+            ejemplares.add(new Ejemplar("E009", true, 6, modeloPelicula.getPeliculas().get(6)));
+            ejemplares.add(new Ejemplar("E010", true, 6, modeloPelicula.getPeliculas().get(6)));
         }
         return ejemplares;
     }

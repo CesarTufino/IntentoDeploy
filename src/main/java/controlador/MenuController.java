@@ -1,10 +1,13 @@
 package controlador;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import modelo.entidades.Usuario;
+
 import java.io.IOException;
 
 @WebServlet("/MenuController")
@@ -24,16 +27,31 @@ public class MenuController extends HttpServlet {
     }
 
     private void ruteador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogeado");
+
+        if (usuario == null) {
+            response.sendRedirect("LoginController?ruta=inicio");
+            return;
+        }
+
         String ruta = (request.getParameter("ruta") == null) ? "inicio" : request.getParameter("ruta");
         switch (ruta) {
-            case "inicio":
-                this.inicio(request, response);
+            case "inicioCajero":
+                this.inicioCajero(request, response);
+                break;
+            case "inicioGerente":
+                this.inicioGerente(request, response);
                 break;
             case "alquilar":
                 this.alquilar(request, response);
                 break;
             case "devolver":
                 this.devolver(request, response);
+                break;
+            case "registrar":
+                this.registrar(request, response);
                 break;
             case "error":
                 break;
@@ -42,8 +60,12 @@ public class MenuController extends HttpServlet {
         }
     }
 
-    private void inicio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("jsp/menu.jsp").forward(request, response);
+    private void inicioCajero(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("jsp/menuCajero.jsp").forward(request, response);
+    }
+
+    private void inicioGerente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("jsp/menuGerente.jsp").forward(request, response);
     }
 
     private void alquilar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,6 +74,9 @@ public class MenuController extends HttpServlet {
 
     private void devolver(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect("DevolverController?ruta=inicio");
+    }
+    private void registrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendRedirect("ClienteController?ruta=inicio");
     }
 
 }

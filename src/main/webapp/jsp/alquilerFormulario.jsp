@@ -17,7 +17,7 @@
     <h1>Alquiler</h1>
     <form action="AlquilerController?ruta=registrar" method="post"
           class="form-group needs-validation"
-          onsubmit="return validarCedula();"
+          onsubmit="return validarCedula(); validarCodigo();"
           name="buscarDatosParaAlquiler" novalidate>
         <div class="mb-3">
             <label for="cedulaCliente" class="form-label">CI del Cliente</label>
@@ -31,7 +31,7 @@
         <div class="mb-3">
             <label for="nombreCliente" class="form-label">Nombre</label> <input
                 type="text" class="form-control" name="nombreCliente"
-                id="nombreCliente" disabled="disabled">
+                id="nombreCliente" value="${cliente.nombre}" disabled="disabled">
             <div class="valid-feedback">Completo</div>
             <div class="invalid-feedback">Campo Vacio o Erroneo, ingresa
                 nuevamente
@@ -74,7 +74,7 @@
                     Número de días de alquiler
                 </label>
                 <input type="number" class="form-control" name="numeroDias" id="numeroDias"
-                       placeholder="Días" required>
+                       placeholder="Días" required min="1" max="14">
                 <div class="valid-feedback">Completo</div>
                 <div class="invalid-feedback">Campo Vacio o Erroneo, ingresa
                     nuevamente
@@ -83,7 +83,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Alquilar</button>
-        <a href="MenuController?ruta=inicio" type="button" class="btn btn-secondary">
+        <a href="MenuController?ruta=inicioCajero" type="button" class="btn btn-secondary">
             Volver
         </a>
     </form>
@@ -94,7 +94,7 @@
     const cedulaInput = document.querySelector('#cedulaCliente');
 
     // Obtener lista de clientes
-    const clientes = [
+    var clientes = [
         <c:forEach items="${clientes}" var="cliente" varStatus="status">
         {
             cedula: '<c:out value="${cliente.cedula}" />',
@@ -126,9 +126,8 @@
         const seccionCombo = document.getElementById('seccionCombo');
         const nombre = document.querySelector('#nombreCliente');
         const apellido = document.querySelector('#apellidoCliente');
-        console.log("Inicio metodo");
+
         for (const cliente of clientes) {
-            console.log(cliente.cedula);
             if (cedulaInput.value.match(cliente.cedula)) {
                 nombre.setAttribute("value", cliente.nombre);
                 apellido.setAttribute("value", cliente.apellido);
@@ -154,7 +153,6 @@
     cedulaInput.addEventListener('input', function () {
         validarCedula(cedulaInput);
         mostrarSeccionCombo();
-
     });
 
 </script>
@@ -188,9 +186,41 @@
             contadorCampos++;
         });
     });
+
+    function verificarEjemplaresPendientes() {
+        const cedula = cedulaInput.value; // Obtén la cédula del cliente ingresada
+        const clientePendiente = clientesConEjemplaresPendientes.find(cliente => cliente.cedula === cedula);
+
+        if (clientePendiente) {
+            const mensajeError = document.getElementById('mensajeError');
+            mensajeError.textContent = 'Este cliente tiene ejemplares pendientes de devolución. No puede realizar un nuevo alquiler.';
+            mensajeError.style.display = 'block';
+            return false;
+        }
+
+        return true;
+    }
+
+    // Usa el evento submit del formulario para llamar a la función de verificación
+    document.querySelector('.needs-validation').addEventListener('submit', function(event) {
+        // Llama a las funciones de validación existentes
+        validarCedula(cedulaInput);
+        validarCodigo(codigoEjemplarInput);
+
+        // Verifica si el cliente tiene ejemplares pendientes antes de enviar el formulario
+        if (!verificarEjemplaresPendientes()) {
+            event.preventDefault();
+        }
+        form.classList.add('was-validated');
+    });
+
 </script>
 
 <script>
+    function volverAIndex() {
+        window.location.href = "menuCajero.jsp";
+    }
+
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (() => {
         'use strict'

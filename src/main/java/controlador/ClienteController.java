@@ -9,14 +9,12 @@ import jakarta.servlet.http.HttpSession;
 import modelo.entidades.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-@WebServlet("/DevolverController")
-public class DevolverController extends HttpServlet {
+@WebServlet("/ClienteController")
+public class ClienteController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public DevolverController() {
+    public ClienteController() {
         super();
     }
 
@@ -53,6 +51,7 @@ public class DevolverController extends HttpServlet {
                 }else{
                     this.registrar(request, response);
                 }
+                break;
             case "error":
                 break;
             default:
@@ -62,42 +61,19 @@ public class DevolverController extends HttpServlet {
 
     private void inicio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cliente modeloCliente = new Cliente();
-        Pelicula modeloPelicula = new Pelicula();
-        Ejemplar modeloEjemplar = new Ejemplar();
-        Alquiler modeloAlquiler = new Alquiler();
-
         request.setAttribute("clientes", modeloCliente.getClientes());
-        request.setAttribute("peliculas", modeloPelicula.getPeliculas());
-        request.setAttribute("ejemplares", modeloEjemplar.getEjemplares());
-        request.setAttribute("alquileres", modeloAlquiler.getAlquileres());
-        request.getRequestDispatcher("jsp/devolucionFormulario.jsp").forward(request, response);
+        request.getRequestDispatcher("jsp/registrarCliente.jsp").forward(request, response);
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String cedula = request.getParameter("cedulaCliente");
+        String cedula = request.getParameter("cedula");
+        String nombre = request.getParameter("nombre");
+        String apellido = request.getParameter("apellido");
+
         Cliente modeloCliente = new Cliente();
-        Cliente cliente = modeloCliente.getByCedula(cedula);
-
-        List<Ejemplar> ejemplaresDevueltos = new ArrayList<>();
-
-        Ejemplar modeloEjemplar = new Ejemplar();
-
-        for (Ejemplar ejemplar : modeloEjemplar.getEjemplares()) {
-            String check = request.getParameter(ejemplar.getCodigoEjemplar());
-            if (check != null) {
-                ejemplaresDevueltos.add(ejemplar);
-            }
-        }
-
-
-        boolean tienePercanse = request.getParameter("percance")!=null;
-
-        Long numeroAlquiler = Long.parseLong(request.getParameter("numeroAlquiler"));
-        Alquiler modeloAlquiler = new Alquiler();
-        Alquiler alquiler = modeloAlquiler.getByNumeroALquiler(numeroAlquiler);
-
-        modeloAlquiler.devolver(alquiler,ejemplaresDevueltos, cliente, tienePercanse);
+        Cliente cliente = new Cliente(cedula,nombre,apellido);
+        modeloCliente.create(cliente);
 
         response.sendRedirect("MenuController?ruta=inicioCajero");
     }

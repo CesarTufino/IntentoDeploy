@@ -70,6 +70,7 @@ public class Cliente {
 
             clientes.add(cliente1);
             clientes.add(cliente2);
+
         }
         return clientes;
     }
